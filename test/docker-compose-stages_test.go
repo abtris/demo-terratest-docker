@@ -10,29 +10,42 @@ import (
 	"github.com/gruntwork-io/terratest/modules/docker"
 	http_helper "github.com/gruntwork-io/terratest/modules/http-helper"
 	"github.com/gruntwork-io/terratest/modules/random"
+	test_structure "github.com/gruntwork-io/terratest/modules/test-structure"
 )
 
-func TestDockerComposeLocal(t *testing.T) {
+func TestDockerComposeWithStagesLocal(t *testing.T) {
 	t.Parallel()
 
+	workingDir := "../hello-world-docker-compose-stages"
+
+	test_structure.RunTestStage(t, "build_docker_image", func() {
+		buildImage(t, workingDir)
+	})
+	test_structure.RunTestStage(t, "run_docker_compose", func() {
+		runCompose(t, workingDir)
+	})
+}
+
+func buildImage(t *testing.T, workingDir string) {
 	tag := "go-webapp"
 	buildOptions := &docker.BuildOptions{
 		Tags: []string{tag},
 	}
+	docker.Build(t, workingDir, buildOptions)
+}
 
-	docker.Build(t, "../hello-world-docker-compose", buildOptions)
-
-	serverPort := 80
+func runCompose(t *testing.T, workingDir string) {
+	serverPort := 88
 	randomSuffix := random.UniqueId()
 	expectedServerText := fmt.Sprintf("Hello, %s!", randomSuffix)
 
 	dockerOptions := &docker.Options{
-		WorkingDir: "../hello-world-docker-compose",
+		WorkingDir: workingDir,
 
 		EnvVars: map[string]string{
 			"SERVER_TEXT":  expectedServerText,
-			"SERVER_PORT":  strconv.Itoa(serverPort),
 			"randomSuffix": randomSuffix,
+			"SERVER_PORT":  strconv.Itoa(serverPort),
 		},
 	}
 
