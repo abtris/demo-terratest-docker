@@ -18,6 +18,7 @@ jobs:
           name: Run unit tests
           command: |
             make test-unit
+      - run: cp tmp/unit-report.xml /tmp/test-results/unit-report.xml
       - save_cache:
           key: v1-pkg-cache
           paths:
