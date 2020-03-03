@@ -13,6 +13,7 @@ jobs:
           keys:
             - v1-pkg-cache
       - run: go get gotest.tools/gotestsum
+      - run: cd test && go mod download
       - run:
           name: Run unit tests
           command: |
