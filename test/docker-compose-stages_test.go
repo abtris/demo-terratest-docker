@@ -19,15 +19,15 @@ func TestDockerComposeWithStagesLocal(t *testing.T) {
 	workingDir := "../hello-world-docker-compose-stages"
 
 	test_structure.RunTestStage(t, "build_docker_image", func() {
-		buildImage(t, workingDir)
+		buildImage(t, "go-webapp", workingDir)
+		buildImage(t, "local/nginx", "../nginx")
 	})
 	test_structure.RunTestStage(t, "run_docker_compose", func() {
 		runCompose(t, workingDir)
 	})
 }
 
-func buildImage(t *testing.T, workingDir string) {
-	tag := "go-webapp"
+func buildImage(t *testing.T, tag string, workingDir string) {
 	buildOptions := &docker.BuildOptions{
 		Tags: []string{tag},
 	}
@@ -35,7 +35,7 @@ func buildImage(t *testing.T, workingDir string) {
 }
 
 func runCompose(t *testing.T, workingDir string) {
-	serverPort := 88
+	serverPort := 80
 	randomSuffix := random.UniqueId()
 	expectedServerText := fmt.Sprintf("Hello, %s!", randomSuffix)
 

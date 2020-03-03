@@ -22,6 +22,13 @@ func TestDockerComposeLocal(t *testing.T) {
 
 	docker.Build(t, "../hello-world-docker-compose", buildOptions)
 
+	tagNginx := "local/nginx"
+	buildOptionsNginx := &docker.BuildOptions{
+		Tags: []string{tagNginx},
+	}
+
+	docker.Build(t, "../nginx", buildOptionsNginx)
+
 	serverPort := 80
 	randomSuffix := random.UniqueId()
 	expectedServerText := fmt.Sprintf("Hello, %s!", randomSuffix)
