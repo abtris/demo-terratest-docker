@@ -14,7 +14,7 @@ import (
 )
 
 func TestDockerComposeWithStagesLocal(t *testing.T) {
-	t.Parallel()
+	// t.Parallel()
 
 	workingDir := "../hello-world-docker-compose-stages"
 

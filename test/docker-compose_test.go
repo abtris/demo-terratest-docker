@@ -13,7 +13,7 @@ import (
 )
 
 func TestDockerComposeLocal(t *testing.T) {
-	t.Parallel()
+	// t.Parallel()
 
 	tag := "go-webapp"
 	buildOptions := &docker.BuildOptions{
