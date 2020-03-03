@@ -1,20 +1,17 @@
 package test
 
 import (
-	"crypto/tls"
 	"fmt"
 	"strconv"
 	"testing"
-	"time"
 
 	"github.com/gruntwork-io/terratest/modules/docker"
-	http_helper "github.com/gruntwork-io/terratest/modules/http-helper"
 	"github.com/gruntwork-io/terratest/modules/random"
 	test_structure "github.com/gruntwork-io/terratest/modules/test-structure"
+	"github.com/magiconair/properties/assert"
 )
 
 func TestDockerComposeWithStagesLocal(t *testing.T) {
-	// t.Parallel()
 
 	workingDir := "../hello-world-docker-compose-stages"
 
@@ -53,11 +50,14 @@ func runCompose(t *testing.T, workingDir string) {
 
 	docker.RunDockerCompose(t, dockerOptions, "up", "-d")
 
-	maxRetries := 10
-	timeBetweenRetries := 5 * time.Second
-	url := fmt.Sprintf("http://localhost:%d/hello", serverPort)
+	// https://circleci.com/docs/2.0/building-docker-images/
+	// docker run --network container:my-app appropriate/curl --retry 10 --retry-connrefused http://localhost:8080
+	opts := &docker.RunOptions{
+		Command:      []string{"--retry", "5", "--retry-connrefused", "-s", "http://production_nginx:80/hello"},
+		OtherOptions: []string{"--network", "testdockercomposewithstageslocal_teststack-network"},
+	}
+	tag := "appropriate/curl"
+	output := docker.Run(t, tag, opts)
+	assert.Equal(t, expectedServerText, output)
 
-	tlsConfig := tls.Config{}
-
-	http_helper.HttpGetWithRetry(t, url, &tlsConfig, 200, expectedServerText, maxRetries, timeBetweenRetries)
 }

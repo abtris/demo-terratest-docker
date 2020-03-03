@@ -6,7 +6,7 @@ services:
     networks:
       - "teststack-network"
     ports:
-      - "80:80"
+      - "0.0.0.0:80:80"
   go-webapp:
     image: go-webapp:latest
     container_name: "production_go-webapp"
