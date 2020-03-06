@@ -13,10 +13,10 @@ import (
 
 func TestDockerComposeWithStagesLocal(t *testing.T) {
 
-	workingDir := "../hello-world-docker-compose-stages"
+	workingDir := "../hello-world-docker-compose"
 
 	test_structure.RunTestStage(t, "build_docker_image", func() {
-		buildImage(t, "go-webapp", workingDir)
+		buildImage(t, "go-webapp", "../demowebapp")
 		buildImage(t, "local/nginx", "../nginx")
 	})
 	test_structure.RunTestStage(t, "run_docker_compose", func() {

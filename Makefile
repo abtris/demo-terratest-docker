@@ -2,13 +2,17 @@
 .DEFAULT_GOAL:=help
 SHELL:=/bin/bash
 
+ifdef CIRCLECI
+$(eval testunitargs += "-run=TestDocker")
+endif
+
 .PHONY: help test build push plan apply destroy
 
 help:  ## Display this help
 	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m<target>\033[0m\n\nTargets:\n"} /^[a-zA-Z_-]+:.*?##/ { printf "  \033[36m%-10s\033[0m %s\n", $$1, $$2 }' $(MAKEFILE_LIST)
 
 test: ## Run tests
-	cd test && go test
+	cd test && go test $(testunitargs)
 
 build: ## Build docker image for docker-compose
 	cd hello-world-docker && docker build . -t go-webapp
