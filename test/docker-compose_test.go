@@ -17,7 +17,7 @@ func TestDockerComposeLocal(t *testing.T) {
 		Tags: []string{tag},
 	}
 
-	docker.Build(t, "../hello-world-docker-compose", buildOptions)
+	docker.Build(t, "../demowebapp", buildOptions)
 
 	tagNginx := "local/nginx"
 	buildOptionsNginx := &docker.BuildOptions{
