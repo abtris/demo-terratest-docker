@@ -14,6 +14,18 @@ help:  ## Display this help
 test: ## Run tests
 	cd test && go test $(testunitargs)
 
+demo: ## Run demo 1
+	cd test && go test -run TestDockerComposeLocal
+
+demo2: ## Run demo 2
+	cd test && go test -run TestDockerComposeWithStagesLocal
+
+demo3: ## Run demo 3
+	cd test && SKIP_build_docker_image=1 go test -run TestDockerComposeWithStagesLocal
+
+demo4: ## Run demo 4
+	cd test && go test -run TestKubernetes
+
 build: ## Build docker image for docker-compose
 	cd hello-world-docker && docker build . -t go-webapp
 
