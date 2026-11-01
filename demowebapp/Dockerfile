@@ -1,4 +1,4 @@
-FROM golang:1.14-alpine
+FROM golang:1.27-alpine
 
 # Copy the local package files to the container’s workspace.
 ADD . /go/src/github.com/abtris/demo-webapp
